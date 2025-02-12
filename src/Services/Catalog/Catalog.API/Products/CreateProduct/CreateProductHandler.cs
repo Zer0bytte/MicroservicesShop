@@ -8,22 +8,35 @@ public record CreateProductCommand(string Name,
 
 public record CreateProductResult(Guid Id);
 
-internal class CreateProductCommandHandler(IDocumentSession session) : ICommandHandler<CreateProductCommand, CreateProductResult>
+
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public async Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public CreateProductCommandValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+        RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required");
+        RuleFor(x => x.Price).NotEmpty().WithMessage("Price is required");
+        RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is required");
+    }
+}
+
+internal class CreateProductCommandHandler(IDocumentSession session)
+    : ICommandHandler<CreateProductCommand, CreateProductResult>
+{
+    public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var product = new Product
         {
-            Name = request.Name,
-            Category = request.Category,
-            Description = request.Description,
-            Price = request.Price,
-            ImageFile = request.ImageFile
+            Name = command.Name,
+            Category = command.Category,
+            Description = command.Description,
+            Price = command.Price,
+            ImageFile = command.ImageFile
         };
 
         session.Store(product);
         await session.SaveChangesAsync(cancellationToken);
-    
+
         return new CreateProductResult(product.Id);
 
     }
