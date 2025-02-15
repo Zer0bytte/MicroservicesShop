@@ -36,7 +36,6 @@ internal class CreateProductCommandHandler(IDocumentSession session, IPublisher 
 
         session.Store(product);
         await session.SaveChangesAsync(cancellationToken);
-        await publisher.Publish(new ProductCreatedEvent());
         return new CreateProductResult(product.Id);
 
     }
