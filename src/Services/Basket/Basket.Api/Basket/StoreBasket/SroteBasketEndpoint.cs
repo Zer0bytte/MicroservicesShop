@@ -17,10 +17,10 @@ public class SroteBasketEndpoint : ICarterModule
 
             return Results.Created($"/basket/{response.Username}", response);
         })
-            .WithName("StoreBasket")
-            .Produces<StoreBasketResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithSummary("Store Basket")
-            .WithDescription("Store Basket");
+        .WithName("StoreBasket")
+        .Produces<StoreBasketResponse>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .WithSummary("Store Basket")
+        .WithDescription("Store Basket");
     }
 }
